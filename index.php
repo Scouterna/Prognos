@@ -1,128 +1,8 @@
 ﻿<html>
 <head>
 <title>Statistik</title>
-<style type="text/css">
-	html, body {
-	margin:0;
-	padding:0;
-	}
-	table {
-	text-align: center;
-	}
-	th .avdelningar {
-	font-size: 11px;
-	}
-	.killar {
-	color: #191970;
-	background-color: #191970;
-	}
-	.tjejer {
-	color: #DC143C;
-	background-color: #DC143C;
-	}
-	.annat {
-	color: #FFA500;
-	background-color: #FFA500;
-	}
+<link rel="stylesheet" href="scoutnet_statistik.css">
 
-	td.letare {
-	background:#B88448;
-	border: 4px solid #B88448;
-	}
-	td.sparare {
-	background:#4fb847;
-	border: 3px solid #4fb847;
-	}
-	td.upptackare {
-	background:#009CDA;
-	border: 3px solid #009CDA;
-	}
-	td.aventyrare {
-	background:#ED7703;
-	border: 3px solid #ED7703;
-	}
-	td.utmanare {
-	background:#DC006B;
-	border: 3px solid #DC006B;
-	}
-	td.letare.moved {
-	border: 3px solid #ffffff;
-	}
-	td.sparare.moved {
-	border: 3px solid #B88448;
-	}
-	td.upptackare.moved {
-	border: 3px solid #4fb847;
-	}
-	td.aventyrare.moved {
-	border: 3px solid #009CDA;
-	}
-	td.utmanare.moved {
-	border: 3px solid #ED7703;
-	}
-	.allaantal, .smalltitle {
-	font-size: 10px;
-	}
-	.scoutertotalt{
-	font-weight: bold;
-	}
-
-	.yearrow {
-	font-size: 9px;
-	}
-
-	.graph {
-		width: 24px;
-		height: 24px;
-		border: 1px solid #aeaeae;
-		background-color: #eaeaea;
-	}
-	.bar {
-		width: 6px;
-		margin: 1px;
-		display: inline-block;
-		position: relative;
-	/*	background-color: #aeaeae;*/
-		vertical-align: top;
-	}
-	.stor .graph {
-		width: 90px;
-		height: 90px;
-		border: 1px solid #aeaeae;
-		background-color: #eaeaea;
-	}
-	.stor .bar {
-		width: 24px;
-		margin: 3px;
-		display: inline-block;
-		position: relative;
-	/*	background-color: #aeaeae;*/
-		vertical-align: top;
-	}
-	.stats table table th {
-	transform: rotate(-65deg);
-	font-size: 8px;
-	height: 35px;
-	}
-	.stats td {
-	border-width:1px;
-	}
-	.unused {
-	opacity: 0.65;
-	}
-
-	.main td:first-child div, .flip {
-	transform: rotate(270deg);
-	}
-
-	@media screen and (min-device-width: 640px) {
-	.area {
-		float:left;
-		margin-right: 20px;
-		}
-	}
-
-</style>
 </head>
 <body>
 <?php
@@ -133,243 +13,14 @@
 	$start = $time;
 
 	/*
-		Begränsning till högst 3 år på en gren
-	
-	
+		Begränsning till högst 3 år på en gren	
 	*/
 	
+	/************Standardinställning för API:er***************/
+	require_once('scoutnet_basic_config.php');
 	
-	function get_scoutnet_api_url()	{
-
-		$scoutnet_api_url = "www.scoutnet.se";
-		return $scoutnet_api_url;
-
-	}
-
-	/*
-	Function to get the value of the kår-id from the option page
-	*/
-	function scoutnet_get_option_kar_id()	{
-
-		return 765;
-	
-	}
-	/*
-	Function to get the value of the api-nyckel Kår deltajerad from the option page
-	*/
-	function scoutnet_get_option_api_nyckel_kar_full()	{
-
-		return 'f86788987md2kd04ls048dj6baae5d38352f';
-	}
-		
-	/*
-	 * Check if options to be able to use functions based on the detailed memberlist
-	 */
-	function scoutnet_get_member_list($args = "") {
-		// detaljerad medlemslista /api/group/memberlist
-
-		$karid = scoutnet_get_option_kar_id();
-		$apinyckel = scoutnet_get_option_api_nyckel_kar_full();
-		$apiurl = get_scoutnet_api_url();
-
-		$result = @file_get_contents("https://$karid:$apinyckel@$apiurl/api/group/memberlist$args");
-
-		if($result !== FALSE)	{
-			return json_decode($result, true);
-		}
-	}
-
-/*Ta bort allt ovan detta vid flytt till riktiga Wordpressplugin pga dubbelt***************/
-
-/****Detta ska ligga utanför funktionen*******************************/
-
 	/*************Här kan du göra dina egna inställningar***************/
-	
-	/*
-	 * Returnera lista av letaravdelningar
-	 * Platsen i arrayen där avdelningsnamnet står bestämmer i vilken kolumn som avdelningen visas
-	 * kan vara bra för att enkelt illustrera att tisdagsspårarna flyttar som standard till tisdagsupptäckarna,
-	 * så den kan skrivas i samma kolumn under respektive gren. Blir mer lättöverskådligt då.
-	 */
-	function get_avdelningar_letare($lang, $empty="")	{
-		
-		$letare = array("Bävrarna", "", "");
-		
-		if ('empty'==$empty)	{
-			$letare = scoutnet_remove_empty_elements($letare);
-		}
-		
-		if ('english'==$lang)	{
-			$letare = scoutnet_convert_array_to_english_letters($letare);
-		}		
-		return 	$letare;
-	}
-	
-	/*
-	 * Skriv en formel på aktuell plats för att bestämma hur antal scouter nästa år ska vara
-	 * skriv avdelningsnamn och vanliga räknetecken
-	 * Om kolla i väntelistan i stället för avdelningsnamn så skriver du W.
-	 * Värden kan avrundas upp eller ner, avsluta formeln med + eller -
-	 */
-	function scoutnet_get_letare_calc($avdelning_index)	{
-		
-		$letare = array("W", "", "","", "", "", "", "", "");
-		return $letare[$avdelning_index];
-	}
-	/******************/
-	
-	/*
-	 * Returnera lista av spåraravdelningar
-	 */
-	function get_avdelningar_sparare($lang, $empty="")	{
-		
-		$sparare = array("", "Insekterna", "Gnagarna", "");
-		
-		if ('empty'==$empty)	{
-			$sparare = scoutnet_remove_empty_elements($sparare);
-		}
-		
-		if ('english'==$lang)	{
-			$sparare = scoutnet_convert_array_to_english_letters($sparare);
-		}		
-		return 	$sparare;
-	}
-	
-	function scoutnet_get_sparare_calc($avdelning_index)	{
-		
-		$sparare = array("", "Bävrarna/2+", "Bävrarna/2-","", "", "", "", "", "");
-		return $sparare[$avdelning_index];
-	}
-	
-	/*******************/
-	/*
-	 * Returnera lista av upptäckaravdelningar
-	 */
-	function get_avdelningar_upptackare($lang, $empty="")	{
-		
-		$upptackare = array("", "Asarna", "Skogsbrynet","", "", "", "", "", "");
-		
-		if ('empty'==$empty)	{
-			$upptackare = scoutnet_remove_empty_elements($upptackare);
-		}		
-		
-		if ('english'==$lang)	{
-			$upptackare = scoutnet_convert_array_to_english_letters($upptackare);
-		}		
-		return 	$upptackare;
-	}
-	
-	function scoutnet_get_upptackare_calc($avdelning_index)	{
-		
-		$upptackare = array("", "Insekterna", "Gnagarna","", "", "", "", "", "");
-		return $upptackare[$avdelning_index];
-	}
-	
-	/***************/
-	
-	/*
-	 * Returnera lista av äventyraravdelningar
-	 */
-	function get_avdelningar_aventyrare($lang, $empty="")	{
-		
-		$aventyrare = array("", "", "", "Stigfinnarna", "");
-		
-		if ('empty'==$empty)	{
-			$aventyrare = scoutnet_remove_empty_elements($aventyrare);
-		}
-		
-		if ('english'==$lang)	{
-			$aventyrare = scoutnet_convert_array_to_english_letters($aventyrare);
-		}		
-		return 	$aventyrare;
-	}
-	
-	function scoutnet_get_aventyrare_calc( $avdelning_index)	{
-		
-		$aventyrare = array("", "", "","Asarna+Skogsbrynet", "", "", "", "", "");
-		return $aventyrare[$avdelning_index];
-	}
-	
-	/***************/
-	
-	/*
-	 * Returnera lista av utmanaravdelningar
-	 */
-	function get_avdelningar_utmanare($lang, $empty="")	{
-		
-		$utmanare = array("", "", "", "", "Seniorerna", "", "");
-		
-		if ('empty'==$empty)	{
-			$utmanare = scoutnet_remove_empty_elements($utmanare);
-		}
-		
-		if ('english'==$lang)	{
-			$utmanare = scoutnet_convert_array_to_english_letters($utmanare);
-		}		
-		return 	$utmanare;
-	}
-	
-	function scoutnet_get_utmanare_calc( $avdelning_index)	{
-		
-		$utmanare = array("", "", "","", "Stigfinnarna", "", "", "", "");
-		return $utmanare[$avdelning_index];
-	}
-	
-	
-	/*
-	 * Returnernar åldersintervallet för gren
-	 */
-	function get_age_gren($args)	{
-		
-		if ('letare'==$args)	{
-			$min_year = 8;
-			$max_year = 8;
-			$antal_year = $max_year - $min_year + 1;
-		}
-		else if ('sparare'==$args)	{
-			$min_year = 9;
-			$max_year = 10;
-			$antal_year = $max_year - $min_year + 1;
-		}
-		else if ('upptackare'==$args)	{
-			$min_year = 11;
-			$max_year = 12;
-			$antal_year = $max_year - $min_year + 1;
-		}
-		else if ('aventyrare'==$args)	{
-			$min_year = 13;
-			$max_year = 15;
-			$antal_year = $max_year - $min_year + 1;
-		}
-		else if ('utmanare'==$args)	{
-			$min_year = 16;
-			$max_year = 18;
-			$antal_year = $max_year - $min_year + 1;
-		}
-		return array($min_year, $max_year, $antal_year);
-	}
-	
-	/*
-	 * Returnerar array med grenar
-	 * Fast längd
-	 * Ändras om man vill byta namn på grenar
-	 */
-	function scoutnet_get_my_grenar()	{
-		
-		$grenar = array("Letare", "Spårare", "Upptäckare", "Äventyrare", "Utmanare");
-		return $grenar;
-	}
-	
-	
-	/**************Nedanför detta behöver inga ändringar göras***************/
-	
-	
-	
-	
-	
-	
-	
-	
+	require_once('scoutnet_statistik_config.php');	
 	
 	
 	
@@ -1164,6 +815,7 @@
 		
 		$y = 0;	//räknare för varje årskull
 		
+		
 		for ($arskull = 1; $arskull < $gren_antal_year+1; $arskull++)	{
 			$tmp_since_last_match = 0;
 			$ant_varv = 0;
@@ -1541,8 +1193,12 @@
 		<div class="area main">
 			<table>
 				<tr>
-					<th colspan="2">&nbsp;</th>
-					<?php					
+				
+					
+					<?php											
+						
+						echo "<th colspan='2'>&nbsp;</th>";
+						
 						$tmp_avdelningar = get_avdelningsnamn('swedish', 'no age', 'matrix', 'no empty');
 							
 						$max_active_col = scoutnet_get_number_of_active_columns();
@@ -1781,14 +1437,18 @@
 		<br>
 		<?php		
 		
-/************Ta bort allt nedanför detta vid flytt till riktiga plugin************/
+		/************Ta bort allt nedanför detta vid flytt till riktiga plugin************/
 
-$time = microtime();
-$time = explode(' ', $time);
-$time = $time[1] + $time[0];
-$finish = $time;
-$total_time = round(($finish - $start), 4);
-echo '<div>Page generated in '.$total_time.' seconds.</div>';
-?>
+		$time = microtime();
+		$time = explode(' ', $time);
+		$time = $time[1] + $time[0];
+		$finish = $time;
+		$total_time = round(($finish - $start), 4);
+		echo '<div>Page generated in '.$total_time.' seconds.</div>';
+		?>
+
+
+	
+	
 </body>
 </html>

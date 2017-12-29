@@ -1,0 +1,119 @@
+html, body {
+margin:0;
+padding:0;
+}
+table {
+text-align: center;
+}
+th .avdelningar {
+font-size: 11px;
+}
+.killar {
+color: #191970;
+background-color: #191970;
+}
+.tjejer {
+color: #DC143C;
+background-color: #DC143C;
+}
+.annat {
+color: #FFA500;
+background-color: #FFA500;
+}
+
+td.letare {
+background:#B88448;
+border: 4px solid #B88448;
+}
+td.sparare {
+background:#4fb847;
+border: 3px solid #4fb847;
+}
+td.upptackare {
+background:#009CDA;
+border: 3px solid #009CDA;
+}
+td.aventyrare {
+background:#ED7703;
+border: 3px solid #ED7703;
+}
+td.utmanare {
+background:#DC006B;
+border: 3px solid #DC006B;
+}
+td.letare.moved {
+border: 3px solid #ffffff;
+}
+td.sparare.moved {
+border: 3px solid #B88448;
+}
+td.upptackare.moved {
+border: 3px solid #4fb847;
+}
+td.aventyrare.moved {
+border: 3px solid #009CDA;
+}
+td.utmanare.moved {
+border: 3px solid #ED7703;
+}
+.allaantal, .smalltitle {
+font-size: 10px;
+}
+.scoutertotalt{
+font-weight: bold;
+}
+
+.yearrow {
+font-size: 9px;
+}
+
+.graph {
+	width: 24px;
+	height: 24px;
+	border: 1px solid #aeaeae;
+	background-color: #eaeaea;
+}
+.bar {
+	width: 6px;
+	margin: 1px;
+	display: inline-block;
+	position: relative;
+/*	background-color: #aeaeae;*/
+	vertical-align: top;
+}
+.stor .graph {
+	width: 90px;
+	height: 90px;
+	border: 1px solid #aeaeae;
+	background-color: #eaeaea;
+}
+.stor .bar {
+	width: 24px;
+	margin: 3px;
+	display: inline-block;
+	position: relative;
+/*	background-color: #aeaeae;*/
+	vertical-align: top;
+}
+.stats table table th {
+transform: rotate(-65deg);
+font-size: 8px;
+height: 35px;
+}
+.stats td {
+border-width:1px;
+}
+.unused {
+opacity: 0.65;
+}
+
+.main td:first-child div, .flip {
+transform: rotate(270deg);
+}
+
+@media screen and (min-device-width: 640px) {
+.area {
+	float:left;
+	margin-right: 20px;
+	}
+}
