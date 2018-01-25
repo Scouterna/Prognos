@@ -1,7 +1,7 @@
-﻿<html>
+<html>
 <head>
-<title>Statistik</title>
-<link rel="stylesheet" href="scoutnet_statistik.css">
+<title>Prognos</title>
+<link rel="stylesheet" href="scoutnet_prognos.css">
 
 </head>
 <body>
@@ -20,7 +20,7 @@
 	require_once('scoutnet_basic_config.php');
 	
 	/*************Här kan du göra dina egna inställningar***************/
-	require_once('scoutnet_statistik_config.php');	
+	require_once('scoutnet_prognos_config.php');	
 	
 	
 	
@@ -245,7 +245,9 @@
 		global $termin;
 		
 		if (!empty($theunit))	{	//Om avdelning, alltså ej summan till höger
-			$thearray = $thearray[$theunit];
+			if (!empty($thearray[$theunit]))	{
+				$thearray = $thearray[$theunit];
+			}
 		}
 		//echo "ABCD " . $theyear . " ";
 		
@@ -259,7 +261,7 @@
 				$thearray[$theyear] = $temparray;	//Array för olika ålder
 			}
 			else	{	//Om åk1, men avdelningen finns ej
-				echo "asdf";				
+				echo "FEL";				
 			}
 		}
 		
@@ -826,7 +828,8 @@
 					echo "<td rowspan=" . $gren_antal_year . "><div>" . $gren_namn . "</div></td>";
 				}
 				
-				echo "<td><div class='smalltitle flip'>&aring;r " . $arskull . "</div></td>";
+				$tmp_y = $thisyear-$gren_min_age-$y;
+				echo "<td><div class='smalltitle flip'>&aring;r " . $arskull . "<br><i>" . $tmp_y . "</i></div></td>";
 				
 				for ($k = 0; $k < $antal_avdelningar; $k++)	{
 					
@@ -1279,8 +1282,9 @@
 					<th colspan="2">Totalt</th>
 				</tr>
 				<tr class="yearrow">
-					<td colspan="2">&nbsp;</td>					
-					<?php						
+										
+					<?php
+						echo "<td colspan='2'>&nbsp;</td>";
 						for ($r = 0; $r<$max_active_col+1; $r++)	{	//Årtalen som visar i toppen							
 								echo "<td>" . $dispyear1 . "</td>";
 								echo "<td>" . $dispyear2 . "</td>";							
@@ -1325,11 +1329,7 @@
 				</tr>
 			</table>
 		</div>
-		<div class="area legend">
-		<i>F&ouml;rklaringar:</i><br>
-		Hur m&aring;nga av varje k&ouml;n: 0/0/0 = killar/tjejer/annat<br>
-		<span class="killar">#</span> = Killar <span class="tjejer">#</span> = Tjejer <span class="annat">#</span> = Annat<br>
-		<i></i>
+		
 		<?php
 		//echo "<pre>";
 		//print_r($waitinglist);
@@ -1433,10 +1433,44 @@
 			print_r($waitinglist);
 			echo "</pre>";*/
 			?>
-		</div>
-		<br>
-		<?php		
 		
+		</div>
+		<div id="right">
+		<div class="area legend">
+		<i>F&ouml;rklaringar:</i><br>
+		Hur m&aring;nga av varje k&ouml;n: 0/0/0 = killar/tjejer/annat<br>
+		<span class="killar">#</span> = Killar <span class="tjejer">#</span> = Tjejer <span class="annat">#</span> = Annat<br>
+		<i>Dessa f&auml;rger slumpas fram. Uppdatera sidan om f&auml;rgerna &auml;r f&ouml;r lika.</i>
+		</div>
+		<div class="area queue">
+		<h2>K&ouml;</h2>
+		<i><u>Av dessa scouter &auml;r det bara den yngsta grenen som l&auml;ggs till i prognoslistan.</u></i>
+		<table>
+		<tr><th>F&ouml;dd:</th><th>Antal:</th></tr>
+		<?php
+		ksort($waitinglist);
+		foreach($waitinglist as $year => $values) {
+			$antal = $values['total'];
+			if ($year == $startyear)	{
+				echo "<tr class=\"rightage\"><td>$year</td><td>$antal</td></tr>";
+			}
+			else if ($year < $startyear)	{
+				echo "<tr class=\"overage\"><td>$year</td><td>$antal</td></tr>";
+			}
+			else	{
+				echo "<tr><td>$year</td><td>$antal</td></tr>";
+			}
+		}
+		
+		echo "</table>";		
+		echo "<pre>";
+		//print_r($waitinglist);
+		echo "</pre>";
+		?>
+		</div>
+		</div>		
+		
+		<?php
 		/************Ta bort allt nedanför detta vid flytt till riktiga plugin************/
 
 		$time = microtime();
@@ -1444,11 +1478,8 @@
 		$time = $time[1] + $time[0];
 		$finish = $time;
 		$total_time = round(($finish - $start), 4);
-		echo '<div>Page generated in '.$total_time.' seconds.</div>';
-		?>
-
-
-	
+		echo '<footer>Page generated in '.$total_time.' seconds.</footer>';
+		?>	
 	
 </body>
 </html>
