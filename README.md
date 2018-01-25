@@ -1,5 +1,5 @@
-# Statistik
-Fristående statistikprogram som visar antalet på respektive avdelning nu och antal nästa år
+# Prgnos
+Fristående prognosprogram som visar antalet på respektive avdelning nu och antal nästa år
 
 ## Begränsningar
 - Max antal år på en avdelning är 3 år
@@ -8,13 +8,13 @@ Fristående statistikprogram som visar antalet på respektive avdelning nu och a
 ## Övrigt
 Om underåring (börjat för tidigt på avdelning) eller överåring (är egentligen för gammal) så räknas man som 1:a åring respektive sistaåring (normalt sett 2:a åring eller 3:e åring beroende på inställning)
 
-Följande behöver ställas in för respektive kår i filerna scoutnet_basic_config.php & scoutnet_statistik_config.php
+Följande behöver ställas in för respektive kår i filerna scoutnet_basic_config.php & scoutnet_prognos_config.php
 ### scoutnet_basic_config.php
 - scoutnet_get_option_kar_id()
   - Ändra kårens id-nummer. Hittas i Scoutnet under Webbkoppling->Get a detailed csv/xls/json list of all members
 - scoutnet_get_option_api_nyckel_kar_full()
   -Ändra api-nyckeln. Hittas i Scoutnet under Webbkoppling->Get a detailed csv/xls/json list of all members
-### scoutnet_statistik_config.php
+### scoutnet_prognos_config.php
 - Ändra avdelningslistor på grennivå. Varje gren har en array som säger vilka avdelningar som finns på varje gren. Beroende på vilken plats (hur många "", som skrivs innan) så skrivs detta i olika kolumner i tabellen. Nedan listas vilka funktioner som dessa listor är i och som du måste ändra i. Om du t.ex inte har någon avdelning på grenen letare så tar du bort Bävrarna ur listan. Om du vill kalla denna gren för något annat som t.ex Familjescouting eller något annat så går det att ändra på annat ställe.
   - get_avdelningar_letare($lang, $empty="")
   - get_avdelningar_sparare($lang, $empty="")
