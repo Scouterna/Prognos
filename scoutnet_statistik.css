@@ -107,10 +107,28 @@ border-width:1px;
 opacity: 0.65;
 }
 
+.overage {
+	background-color: #c0c0c0;
+}
+.rightage {
+	background-color: #b88448;
+}
+
 .main td:first-child div, .flip {
 transform: rotate(270deg);
 }
 
+footer {
+	clear: both;
+	position: relative;
+	z-index: 10;
+	height: 2em;
+	margin-top: -3em;
+	padding:1.5em;
+	background-color: #efefef;
+	text-align: center;
+}
+ 
 @media screen and (min-device-width: 640px) {
 .area {
 	float:left;
