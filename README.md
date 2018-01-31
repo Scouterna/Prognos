@@ -1,4 +1,4 @@
-# Prgnos
+# Prognos
 Fristående prognosprogram som visar antalet på respektive avdelning nu och antal nästa år
 
 ## Begränsningar
@@ -31,3 +31,6 @@ Följande behöver ställas in för respektive kår i filerna scoutnet_basic_con
   - get_age_gren($args)
 - Använd egna grenbeteckningar. Du kan här byta namn på vad du kallar grenarna. Om du inte vill använda en viss gren tar du bort namnet på den här, men lämna kvar citationstecknen där namnet stod.
   - scoutnet_get_my_grenar()
+
+## Förklaring till exempelbild
+- Insekterna (Spåraravdelning) och Asarna (Upptäckaravdelning) har möten samma veckodag. Det är därför naturligt att de spårare som gått på Insekterna kommer flytta upp till Asarna nästa år vilket är varför de visas i samma kolumn för att göra det lättare att tolka. Oavsett i vilken kolumn som de syns i går det att ha uträkningar som räknar ihop från andra dagar, så detta är bara för att göra det lättare att tolka.
