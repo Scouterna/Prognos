@@ -542,14 +542,13 @@
 		return $unit;
 	}
 	
-	/*
-	 * FIXME Ändra årsintervallet till flexibelt för att passa fler kårer
-	 */
-	function getall ($theyear) {
+	function getall ($startYear) {
 		global $scout_year;
 		$thearray = ['total'=>0,'sex' =>[0=>0,1=>0,2=>0,3=>0]];
-		for ($i=18;$i>7;$i--) {
-			$thearray = SumArray($scout_year[$theyear-$i],$thearray);
+		foreach($scout_year as $year=>$year_data) {
+			if ($year < $startYear) {
+				$thearray = SumArray($year_data, $thearray);
+			}
 		}
 		
 		//print_r($thearray);
@@ -1412,13 +1411,15 @@
 				<tr>
 					<td class="stor">
 						<?php
-						makeitbeautiful(getall($thisyear),2);
+						$startyear = $thisyear - scoutnet_get_start_age();
+						makeitbeautiful(getall($startyear),2);
 						//getsum(getall($thisyear),"no gren","","",1)
 						?>
 					</td>
 					<td class="stor">
 						<?php
-						makeitbeautiful(getall($nextyear),2);
+						$startyear = $nextyear - scoutnet_get_start_age();
+						makeitbeautiful(getall($startyear),2);
 						//getsum(getall($thisyear),"no gren","","",1)
 						?>
 					</td>
@@ -1448,6 +1449,7 @@
 		<table>
 		<tr><th>F&ouml;dd:</th><th>Antal:</th></tr>
 		<?php
+		$startyear = $thisyear - scoutnet_get_start_age();
 		ksort($waitinglist);
 		foreach($waitinglist as $year => $values) {
 			$antal = $values['total'];
