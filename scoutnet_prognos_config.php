@@ -175,4 +175,10 @@
 		return $grenar;
 	}
 
+	/*
+	 * Returnerar ålder året de startar.
+	 */
+	function scoutnet_get_start_age() {
+		return 8;
+	}
 ?>
